@@ -16,7 +16,11 @@ With this app, all employees whether they're doctors, nurses, technicians, EMT p
 [API Documentation](https://documenter.getpostman.com/view/32312306/2s9YymFjCc#c60f9810-efda-4152-9a38-f4448c64c4e7)
 
 ## Design
-![Login Page](./assets/login.png)
-![Home Page](./assets/home.png)
-![Profile Page](./assets/profile.png)
-![Chat Page](./assets/chat.png)
+![Login Page](./assets/login.png)  
+
+![Home Page](./assets/home.png)  
+
+![Profile Page](./assets/profile.png)  
+
+![Chat Page](./assets/chat.png)  
+
