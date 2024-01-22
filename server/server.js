@@ -105,14 +105,6 @@ const posts = [
   },
 ];
 
-
-app.get("/products", async (req, res) => {
-    const collection = client.db("shop").collection("products");
-    const products = await collection.find().toArray();
-    var names = products.map((prod) => prod.name);
-    res.send(names);
-})
-
 app.get("/", (req, res) => {
   const captions = posts.map((post) => post.caption);
   res.send(captions);
