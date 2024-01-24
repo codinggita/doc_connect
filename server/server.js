@@ -3,34 +3,25 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 
-const port = 3000;
+const PORT = process.env.PORT || 3000;
 const app = express();
-const uri = "mongodb://localhost:27017/dummy_data";
-mongoose.connect(uri);
+const uri = "mongodb://localhost:27017/doc_connect";
+
+require(dotenv).config();
+
+mongoose
+  .connect(uri)
+  .then(() =>
+    app.listen(PORT, () => {
+      console.log(`App listening on port ${port}`);
+    })
+  )
+  .catch((err) => console.log(err.message));
 
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "Connection error:"));
 db.once("open", () => {
   console.log("Connected to MongoDB");
-});
-
-const UserModel = mongoose.model(
-  "users",
-  new mongoose.Schema({ username: String, caption: String })
-);
-
-app.get("/", async (req, res) => {
-  try {
-    const documents = await UserModel.find();
-    res.send(documents);
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("Internal Server Error");
-  }
-});
-
-app.listen(port, () => {
-  console.log(`App listening on port ${port}`);
 });
 
 process.on("SIGINT", () => {
