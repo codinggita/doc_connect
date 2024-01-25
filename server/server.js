@@ -1,19 +1,22 @@
-// dummy database and get requests
-const express = require("express");
-const bodyParser = require("body-parser");
-const mongoose = require("mongoose");
+import express from "express";
+import 'dotenv/config'
+import bodyParser from 'body-parser';
+import mongoose from "mongoose";
+import cors from "cors";
+import postRoutes from "./routes/posts.js";
 
 const PORT = process.env.PORT || 3000;
 const app = express();
 const uri = "mongodb://localhost:27017/doc_connect";
 
-require(dotenv).config();
+app.use(cors());
+app.use('/', postRoutes);
 
 mongoose
   .connect(uri)
   .then(() =>
     app.listen(PORT, () => {
-      console.log(`App listening on port ${port}`);
+      console.log(`App listening on port ${PORT}`);
     })
   )
   .catch((err) => console.log(err.message));
