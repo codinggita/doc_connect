@@ -4,28 +4,23 @@ import bodyParser from 'body-parser';
 import mongoose from "mongoose";
 import cors from "cors";
 import postRoutes from "./routes/posts.js";
+import PostMessage from "./models/postMessage.js";
 
 const PORT = process.env.PORT || 3000;
 const app = express();
-const uri = "mongodb://localhost:27017/doc_connect";
 
 app.use(cors());
 app.use('/', postRoutes);
+app.use('/posts', postRoutes);
 
 mongoose
-  .connect(uri)
+  .connect(process.env.MONGO_URI)
   .then(() =>
     app.listen(PORT, () => {
       console.log(`App listening on port ${PORT}`);
     })
   )
   .catch((err) => console.log(err.message));
-
-const db = mongoose.connection;
-db.on("error", console.error.bind(console, "Connection error:"));
-db.once("open", () => {
-  console.log("Connected to MongoDB");
-});
 
 process.on("SIGINT", () => {
   mongoose.connection.close(() => {
