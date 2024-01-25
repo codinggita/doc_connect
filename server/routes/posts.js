@@ -1,9 +1,10 @@
 import express from 'express';
-import { getPosts, createPosts, editPost, deletePost } from '../controllers/posts.js';
+import { getPosts, searchPosts, createPosts, editPost, deletePost } from '../controllers/posts.js';
 
 const router = express.Router();
 
 router.get('/', getPosts);
+router.get('/posts/?search=:hashtag', searchPosts);
 router.post('/posts', createPosts);
 router.patch('/posts/:id', editPost);
 router.delete('/posts/:id', deletePost);

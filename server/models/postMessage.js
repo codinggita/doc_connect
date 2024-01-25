@@ -3,11 +3,11 @@ import mongoose from 'mongoose';
 const postSchema = new mongoose.Schema({
   user: {
     type: String,
-    required: true,
+    // required: true,
   },
   content: {
     type: String,
-    required: true,
+    // required: true,
   },
   image: {
     type: String,
@@ -23,6 +23,10 @@ const postSchema = new mongoose.Schema({
         text: String,
       },
     ],
+    default: [],
+  },
+  hashtags: {
+    type: [String],
     default: [],
   },
   createdAt: {

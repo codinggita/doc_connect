@@ -1,8 +1,8 @@
-import express from 'express';
-import mongoose from 'mongoose';
-import PostMessage from '../models/postMessage.js';
+import express from "express";
+import mongoose from "mongoose";
+import PostMessage from "../models/postMessage.js";
 
-const router = express.Router(); 
+const router = express.Router();
 
 export const getPosts = async (req, res) => {
   try {
@@ -11,40 +11,76 @@ export const getPosts = async (req, res) => {
     res.status(200).json(postMessages);
   } catch (error) {
     console.log(error);
-    res.status(404).json({message: error.message});
+    res.status(404).json({ message: error.message });
+  }
+};
+
+export const searchPosts = async (req, res) => {
+  const { hashtag } = req.params;
+
+  try {
+    const searchMessages = await PostMessage.find({'hastags': hashtag});
+    console.log(searchMessages);
+    res.status(200).json(searchMessages);
+  } catch (error) {
+    console.log(error);
+    res.status(404).json({ message: error.message });
   }
 };
 
 export const createPosts = async (req, res) => {
   const post = req.body;
+  console.log(post);
   const newPost = new PostMessage(post);
   try {
     await newPost.save();
+    res.status(201).json(newPost);
   } catch (error) {
-    res.status(409).json({message: error.message});
+    console.error(error);
+    res.status(409).json({ message: error.message });
   }
 };
 
 export const editPost = async (req, res) => {
-  const {id = _id} = req.params;
-  const post = req.body;
+  const { id } = req.params;
 
-  if(!mongoose.Types.ObjectId.isValid(_id)) return res.status(404).send('No post with that ID');
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(404).send("Invalid post ID");
+  }
 
-  const updatedPost = await PostMessage.findOneAndUpdate(_id, {...post, _id}, { new: true });
-  res.json(updatedPost);
+  try {
+    const updatedPost = await PostMessage.findByIdAndUpdate(
+      id,
+      { $set: req.body }, // Use the request body to update the post
+      { new: true } // Return the updated post
+    );
+
+    if (!updatedPost) {
+      return res.status(404).json({ message: "No post found with that ID" });
+    }
+
+    res.json(updatedPost);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
 };
 
 export const deletePost = async (req, res) => {
-  console.log(req.params);
   const { id } = req.params;
-  console.log(id);
-  const post = req.body;
 
-  if(!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send('No post with that ID');
+  if (!mongoose.Types.ObjectId.isValid(id))
+    return res.status(404).send("No post with that ID");
 
-  const deletedPost = await PostMessage.deleteOne(id);
-  res.json(deletedPost);
+  try {
+    const deletedPost = await PostMessage.findByIdAndDelete(id);
+    if (!deletedPost) {
+      return res.status(404).json({ message: "No post found with that ID" });
+    }
+    res.json(deletedPost);
+  } catch (error) {
+    res.status(500).json({ message: "Internal server error" });
+  }
 };
 
 export default router;
