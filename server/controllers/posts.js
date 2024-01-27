@@ -1,6 +1,7 @@
 import express from "express";
 import mongoose from "mongoose";
 import PostMessage from "../models/postMessage.js";
+import { ObjectId } from "mongodb";
 
 const router = express.Router();
 
@@ -19,12 +20,26 @@ export const searchPosts = async (req, res) => {
   const { hashtag } = req.params;
 
   try {
-    const searchMessages = await PostMessage.find({'hastags': hashtag});
+    const searchMessages = await PostMessage.find({ hashtags: hashtag });
     console.log(searchMessages);
     res.status(200).json(searchMessages);
   } catch (error) {
     console.log(error);
     res.status(404).json({ message: error.message });
+  }
+};
+
+export const getPostLikes = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const post = await PostMessage.findById(id);
+    if (!post) {
+      res.status(200).json(null);
+    }
+    res.status(200).json(post.likes);
+  } catch (error) {
+    console.error(error);
+    throw error;
   }
 };
 
@@ -43,15 +58,25 @@ export const createPosts = async (req, res) => {
 
 export const editPost = async (req, res) => {
   const { id } = req.params;
+  const { title, message, creator, selectedFile, tags } = req.body;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(404).send("Invalid post ID");
   }
 
   try {
-    const updatedPost = await PostMessage.findByIdAndUpdate(
+    const updatedPost = {
+      creator,
+      title,
+      message,
+      tags,
+      selectedFile,
+      _id: id,
+    };
+
+    await PostMessage.findByIdAndUpdate(
       id,
-      { $set: req.body }, // Use the request body to update the post
+      updatedPost, // Use the request body to update the post
       { new: true } // Return the updated post
     );
 
@@ -59,7 +84,7 @@ export const editPost = async (req, res) => {
       return res.status(404).json({ message: "No post found with that ID" });
     }
 
-    res.json(updatedPost);
+    res.status(200).json(updatedPost);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal server error" });
