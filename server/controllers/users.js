@@ -6,9 +6,9 @@ export const getUser = async (req, res) => {
     
     try {
         const user = await UserModel.find({"username": username});
-        res.status(200).json({user});
+        return res.status(200).json({user});
     } catch(error) {
-        res.status(404).json({message: error.message});
+        return res.status(404).json({message: error.message});
     }
 }
 
@@ -17,8 +17,8 @@ export const getUserPost = async (req, res) => {
     
     try {
         const user = await PostMessage.find({"username": username, '_id': post_id});
-        res.status(200).json(user);
+        return res.status(200).json(user);
     } catch(error) {
-        res.status(404).json({message: error.message});
+        return res.status(404).json({message: error.message});
     }
 }

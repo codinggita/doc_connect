@@ -43,6 +43,32 @@ export const getPostLikes = async (req, res) => {
   }
 };
 
+export const likePost = async (req, res) => {
+  const { id } = req.params;
+
+  if (!req.userId) return res.json({ message: "Unauthenticated" });
+
+  if (!mongoose.Types.ObjectId.isValid(id))
+    return res.status(404).send("No post with that ID");
+
+  const post = await PostMessage.findById(id);
+  const user = await UserModel.findById(id);
+
+  const index = post.likes.find((eachUser) => eachUser === user.username);
+
+  if (index === -1) {
+    post.likes.push(user.username);
+  } else {
+    post.likes = post.likes.filter((eachUser) => eachUser !== user.username);
+  }
+
+  const updatedPost = await PostMessage.findByIdAndUpdate(id, post, {
+    new: true,
+  });
+
+  res.json(updatedPost);
+};
+
 export const createPosts = async (req, res) => {
   const post = req.body;
   console.log(post);
@@ -51,40 +77,29 @@ export const createPosts = async (req, res) => {
     await newPost.save();
     res.status(201).json(newPost);
   } catch (error) {
-    console.error(error);
     res.status(409).json({ message: error.message });
   }
 };
 
 export const editPost = async (req, res) => {
   const { id } = req.params;
-  const { title, message, creator, selectedFile, tags } = req.body;
+  const { user, content, image, hashtags} = req.body;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(404).send("Invalid post ID");
   }
 
   try {
-    const updatedPost = {
-      creator,
-      title,
-      message,
-      tags,
-      selectedFile,
-      _id: id,
-    };
+    const updatedPost = { user, content, image, hashtags, _id: id};
 
-    await PostMessage.findByIdAndUpdate(
-      id,
-      updatedPost, // Use the request body to update the post
-      { new: true } // Return the updated post
-    );
+    await PostMessage.findByIdAndUpdate(id, updatedPost, { new: true });
 
     if (!updatedPost) {
       return res.status(404).json({ message: "No post found with that ID" });
     }
 
     res.status(200).json(updatedPost);
+    
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal server error" });
