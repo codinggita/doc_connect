@@ -1,19 +1,11 @@
 import mongoose from 'mongoose';
 
 const postSchema = new mongoose.Schema({
-  user: {
-    type: String,
-    required: true,
-  },
-  content: {
-    type: String,
-    required: true,
-  },
-  image: {
-    type: String,
-  },
+  user: String,
+  content: String,
+  image: String,
   likes: {
-    type: [String], // Array of strings representing usernames
+    type: [String],
     default: [],
   },
   comments: {
@@ -25,9 +17,13 @@ const postSchema = new mongoose.Schema({
     ],
     default: [],
   },
+  hashtags: {
+    type: [String],
+    default: [],
+  },
   createdAt: {
     type: Date,
-    default: Date.now,
+    default: Date.now.toISOString,
   },
 });
 
