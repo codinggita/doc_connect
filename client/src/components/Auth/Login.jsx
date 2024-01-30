@@ -40,7 +40,7 @@ function Login({ setIsLogin }) {
 
         <Link to="./posts">
           <Button fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-            Sign Up
+            Log In
           </Button>
         </Link>
 
