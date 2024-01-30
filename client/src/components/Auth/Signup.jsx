@@ -111,7 +111,7 @@ function Signup({ setIsLogin }) {
                 setIsLogin(true);
               }}
             >
-              Sign In.
+              Log In.
             </Link>{" "}
           </Grid>
         </Grid>
