@@ -5,6 +5,7 @@ import Cookies from 'universal-cookie';
 // import { ChannelSearch, TeamChannelList, TeamChannelPreview } from './';
 import HospitalIcon from '../../assets/hospital.png';
 import LogoutIcon from '../../assets/logout.png';
+
 const SideBar = () => (
   <div className="channel-list__sidebar">
       <div className="channel-list__sidebar__icon1">
@@ -20,9 +21,20 @@ const SideBar = () => (
   </div>
 );
 
-const ChannelListContainer = () => {
+const Header = () => (
+  <div className='channel-list__header'>
+    <p className='channel-list__header__text'>DocConnect Chats</p>
+  </div>
+)
+
+function ChannelListContainer() {
   return (
-    <SideBar />
+    <>
+      <SideBar />
+      <div>
+        
+      </div>
+    </>
   )
 }
 

@@ -38,7 +38,7 @@ const Posts = () => {
               <AccountCircle color="primary" />
             </IconButton>
           </Link>
-          <Link to="/messages">
+          <Link to="/chat">
             <IconButton aria-label="chat-icon">
               <ChatBubbleIcon color="primary" />
             </IconButton>
