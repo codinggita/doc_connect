@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './components/Auth/Authentication';
 import Posts from './components/Posts/Posts';
 import ChatComp from './components/Chat/ChatComp';
+import Profile from './components/Profile/Profile';
 import './App.css';
 
 function App() {
@@ -13,6 +14,7 @@ function App() {
         <Route path='/' element={<Home />}/>
         <Route path='/posts' element={<Posts />}/>
         <Route path='/chat' element={<ChatComp />}/>
+        <Route path='/:username' element={<Profile />}/>
       </Routes>
     </BrowserRouter>
   )
