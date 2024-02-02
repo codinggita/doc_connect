@@ -9,4 +9,4 @@ export { default as EditChannel } from './EditChannel';
 export { default as TeamMessage } from './TeamMessage';
 export { default as Authentication } from '../Auth/Authentication';
 export { default as UserList } from './UserList';
-// export { default as ResultsDropdown } from './ResultsDropdown';
+export { default as ResultsDropdown } from './ResultsDropdown';

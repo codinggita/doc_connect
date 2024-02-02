@@ -33,6 +33,7 @@ function TeamChannelList({ children, error = false, loading, type, isCreating, s
           setCreateType = {setCreateType} 
           setIsEditing = {setIsEditing}
           type={ type === 'team' ? 'team' : 'messaging'}
+          setToggleContainer={setToggleContainer}
         />
       </div>
       {children}

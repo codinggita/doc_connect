@@ -3,7 +3,12 @@ import { ChannelList, useChatContext } from "stream-chat-react";
 import Cookies from "universal-cookie";
 
 // TeamChannelPreview
-import { ChannelSearch, TeamChannelList, TeamChannelPreview } from "./";
+import {
+  ChannelSearch,
+  TeamChannelList,
+  TeamChannelPreview,
+  Authentication,
+} from "./";
 import HospitalIcon from "../../assets/hospital.png";
 import LogoutIcon from "../../assets/logout.png";
 
@@ -18,7 +23,9 @@ const SideBar = ({ logout }) => (
     </div>
     <div className="channel-list__sidebar__icon2" onClick={logout}>
       <div className="icon1__inner">
-        <img src={LogoutIcon} alt="Logout" width="30" />
+        {/* <a href="/"> */}
+          <img src={LogoutIcon} alt="Logout" width="30" />
+        {/* </a> */}
       </div>
     </div>
   </div>
@@ -43,7 +50,10 @@ function ChannelListContent({
   setIsCreating,
   setCreateType,
   setIsEditing,
+  setToggleContainer,
 }) {
+  const { client } = useChatContext();
+
   const logout = () => {
     cookies.remove("id");
     cookies.remove("jwt");
@@ -53,6 +63,9 @@ function ChannelListContent({
 
     window.location.reload();
   };
+
+  const filters = { members: { $in: [client.id] } };
+
   return (
     <>
       <SideBar logout={logout} />
@@ -60,7 +73,7 @@ function ChannelListContent({
         <Header />
         <ChannelSearch />
         <ChannelList
-          filters={{}}
+          filters={filters}
           channelRenderFilterFn={customChannelTeamFilter}
           List={(listProps) => {
             <TeamChannelList
@@ -70,15 +83,22 @@ function ChannelListContent({
               setIsCreating={setIsCreating}
               setCreateType={setCreateType}
               setIsEditing={setIsEditing}
+              setToggleContainer={setToggleContainer}
             />;
           }}
           Preview={(previewProps) => {
-            <TeamChannelPreview {...previewProps} type="team" />;
+            <TeamChannelPreview
+              {...previewProps}
+              setToggleContainer={setToggleContainer}
+              setIsCreating={setIsCreating}
+              setIsEditing={setIsEditing}
+              type="team"
+            />;
           }}
         />
 
         <ChannelList
-          filters={{}}
+          filters={filters}
           channelRenderFilterFn={customChannelMessagingFilter}
           List={(listProps) => {
             <TeamChannelList
@@ -88,10 +108,17 @@ function ChannelListContent({
               setIsCreating={setIsCreating}
               setCreateType={setCreateType}
               setIsEditing={setIsEditing}
+              setToggleContainer={setToggleContainer}
             />;
           }}
           Preview={(previewProps) => {
-            <TeamChannelPreview {...previewProps} type="messaging" />;
+            <TeamChannelPreview
+              {...previewProps}
+              setToggleContainer={setToggleContainer}
+              setIsCreating={setIsCreating}
+              setIsEditing={setIsEditing}
+              type="messaging"
+            />;
           }}
         />
       </div>
