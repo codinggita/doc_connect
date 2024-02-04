@@ -1,18 +1,12 @@
 import React from "react";
 import posts from "../../data";
-import "../../css/Posts.css";
-import logo from "../../assets/logo.svg";
-import AccountCircle from "@mui/icons-material/AccountCircle";
-import ChatBubbleIcon from "@mui/icons-material/ChatBubble";
+import "../../App.css";
 import {
   Grid,
   Typography,
   Container,
-  AppBar,
-  Toolbar,
-  IconButton,
 } from "@mui/material";
-import { Link } from "react-router-dom";
+import Navbar from "../Navbar";
 import PostDetails from "./PostDetails";
 
 const Posts = () => {
@@ -23,28 +17,7 @@ const Posts = () => {
         padding: 0,
       }}
     >
-      <AppBar
-        style={{
-          display: "flex",
-        }}
-        color=""
-      >
-        <Toolbar>
-          <Link to="/posts">
-              <img className="img" src={logo} alt="logo" />
-          </Link>
-          <Link to="/profile">
-            <IconButton aria-label="account-circle">
-              <AccountCircle color="primary" />
-            </IconButton>
-          </Link>
-          <Link to="/chat">
-            <IconButton aria-label="chat-icon">
-              <ChatBubbleIcon color="primary" />
-            </IconButton>
-          </Link>
-        </Toolbar>
-      </AppBar>
+      <Navbar />
       <Grid
         container
         spacing={3}

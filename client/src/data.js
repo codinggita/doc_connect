@@ -23,7 +23,7 @@ const posts = [
     },
     user: "jane_smith",
     content: "Experimenting in the lab today.",
-    image: "https://plus.unsplash.com/premium_photo-1676325101999-78e1993704e5?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    image: "https://images.unsplash.com/photo-1526256262350-7da7584cf5eb?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8bWVkaWNhbHxlbnwwfHwwfHx8MA%3D%3D",
     likes: ["john_doe"],
     comments: [
       {
@@ -60,7 +60,7 @@ const posts = [
   // Post 2
   {
     user: "doctorwellness",
-    image: "https://images.unsplash.com/photo-1526256262350-7da7584cf5eb?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8bWVkaWNhbHxlbnwwfHwwfHx8MA%3D%3D",
+    image: "https://images.unsplash.com/photo-1585421514738-01798e348b17?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTZ8fG1lZGljYWx8ZW58MHx8MHx8fDA%3D",
     likes: ["user4", "user5"],
     content:
       "Taking a moment to appreciate the healing power of kindness. #DoctorLife",
@@ -78,7 +78,7 @@ const posts = [
   // Post 4
   {
     user: "med_researcher",
-    image: "https://images.unsplash.com/photo-1585421514738-01798e348b17?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTZ8fG1lZGljYWx8ZW58MHx8MHx8fDA%3D",
+    image: "https://plus.unsplash.com/premium_photo-1676325101999-78e1993704e5?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     likes: ["user9", "user10", "user11"],
     content:
       "Diving into groundbreaking medical research. #InnovationInMedicine",

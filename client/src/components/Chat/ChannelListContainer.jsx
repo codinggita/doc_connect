@@ -11,6 +11,7 @@ import {
 } from "./";
 import HospitalIcon from "../../assets/hospital.png";
 import LogoutIcon from "../../assets/logout.png";
+import { Link } from "react-router-dom";
 
 const cookies = new Cookies();
 
@@ -18,13 +19,15 @@ const SideBar = ({ logout }) => (
   <div className="channel-list__sidebar">
     <div className="channel-list__sidebar__icon1">
       <div className="icon1__inner">
-        <img src={HospitalIcon} alt="Hospital" width="30" />
+        <Link to="../posts">
+          <img src={HospitalIcon} alt="Hospital" width="30" />
+        </Link>
       </div>
     </div>
     <div className="channel-list__sidebar__icon2" onClick={logout}>
       <div className="icon1__inner">
         {/* <a href="/"> */}
-          <img src={LogoutIcon} alt="Logout" width="30" />
+        <img src={LogoutIcon} alt="Logout" width="30" />
         {/* </a> */}
       </div>
     </div>
