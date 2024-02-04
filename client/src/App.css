@@ -1,0 +1,14 @@
+.img {
+    width: 10rem;
+}
+
+.eachPost {
+    height: 20rem;
+    width: 20rem;
+}
+
+.modalPost {
+    object-fit: contain;
+    height: 40rem;
+    width: 40rem;
+}
