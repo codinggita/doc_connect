@@ -1,3 +1,6 @@
+import React from "react";
+import { Link, useParams } from "react-router-dom";
+import Navbar from "../Navbar";
 import {
   Typography,
   Avatar,
@@ -5,23 +8,24 @@ import {
   Stack,
   Divider,
   Chip,
-  Grid
+  Grid,
 } from "@mui/material";
 import posts from "../../data";
+import EditIcon from "@mui/icons-material/Edit";
 import PostDetails from "../Posts/PostDetails";
 import { deepPurple } from "@mui/material/colors";
-import React from "react";
-import { useParams } from "react-router-dom";
 
 function Profile() {
   const { username } = useParams();
-
   const userPosts = posts.filter((post) => post.user == username);
+
   return (
     <>
+      <Navbar />
       <Container
         maxWidth="lg"
         style={{
+          marginTop: "5rem",
           marginBottom: "1rem",
           display: "flex",
           justifyContent: "center",
@@ -52,6 +56,10 @@ function Profile() {
             }}
           >
             {username}
+            <Link to={`../profile/${username}`}>
+              {/* state={{ userData: data }} */}
+              <EditIcon color="primary" style={{ marginLeft: "1rem" }} />
+            </Link>
           </Typography>
           <Typography color="initial">John Doe</Typography>
           <Typography color="initial">Neurosurgeon</Typography>

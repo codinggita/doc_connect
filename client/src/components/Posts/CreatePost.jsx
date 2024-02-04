@@ -1,29 +1,41 @@
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { styled } from "@mui/material/styles";
 import "../../App.css";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import {
   Box,
   Container,
+  Grid,
   TextField,
   Typography,
+  Modal,
   Backdrop,
   Button,
-  Modal,
 } from "@mui/material";
-import FavoriteIcon from "@mui/icons-material/Favorite";
 import Navbar from "../Navbar";
 
-const EditPost = () => {
-  const location = useLocation();
+const VisuallyHiddenInput = styled("input")({
+  clip: "rect(0 0 0 0)",
+  clipPath: "inset(50%)",
+  height: 1,
+  overflow: "hidden",
+  position: "absolute",
+  bottom: 0,
+  left: 0,
+  whiteSpace: "nowrap",
+  width: 1,
+});
+
+const EditProile = () => {
   const navigate = useNavigate();
-  const data = location.state?.postData;
   const [open, setOpen] = React.useState(true);
 
   const handleClose = () => {
     setOpen(false);
     navigate(-1);
   };
-
+  
   function submitHandler(e) {
     e.preventDefault();
   }
@@ -33,10 +45,12 @@ const EditPost = () => {
       padding={3}
       style={{
         height: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
       }}
     >
       <Navbar />
-
       <Modal
         style={{
           display: "flex",
@@ -74,24 +88,37 @@ const EditPost = () => {
               padding: "1rem 2rem",
             }}
           >
-            Edit Post
+            Create Post
           </Typography>
-
-          <TextField
-            value={data.content}
-            name="caption"
-            required
-            fullWidth
-            id="caption"
-            autoFocus
-            sx={{
-              input: { color: "white" },
-              border: "1px solid#fff",
-            }}
-          />
+          <Grid container spacing={1}>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                placeholder="Caption"
+                name="caption"
+                required
+                fullWidth
+                id="caption"
+                autoFocus
+                sx={{
+                  input: { color: "white" },
+                  border: "1px solid#fff",
+                }}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Button
+                component="label"
+                variant="contained"
+                startIcon={<CloudUploadIcon />}
+              >
+                Upload photo
+                <VisuallyHiddenInput type="file" />
+              </Button>
+            </Grid>
+          </Grid>
 
           <Button fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-            Edit Post
+            Create Post
           </Button>
         </Box>
       </Modal>
@@ -99,4 +126,4 @@ const EditPost = () => {
   );
 };
 
-export default EditPost;
+export default EditProile;

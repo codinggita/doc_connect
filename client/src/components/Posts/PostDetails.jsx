@@ -1,21 +1,33 @@
-import React, { useState } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import React from "react";
+import { Link } from "react-router-dom";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import PostDetailsModal from "./PostDetailsModal";
 import {
   Typography,
   Container,
   Grid,
   Paper,
-  Modal,
-  Backdrop,
-  Fade,
   Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
 } from "@mui/material";
-import EditPost from "./EditPost";
 
 function PostDetails({ data }) {
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   return (
     <Grid item xs={12} md={6} lg={4}>
       <Paper
@@ -34,17 +46,41 @@ function PostDetails({ data }) {
             </Typography>
           </Link>
 
-          {/* {loggedInUser == data.user && edit} */}
-          <Link
-            to={`./edit/${data?._id?.$oid}`}
-            state={{ postData: data }}
-          >
-            <EditIcon />
-          </Link>
+          <div>
+            {/* {loggedInUser == data.user && edit} */}
+            <Link
+              to={`../posts/edit/${data?._id?.$oid}`}
+              state={{ postData: data }}
+              style={{ paddingRight: "0.5rem" }}
+            >
+              <EditIcon color="primary" />
+            </Link>
+            <DeleteIcon color="primary" onClick={handleClickOpen} />
+            <Dialog
+              open={open}
+              onClose={handleClose}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+            >
+              <DialogTitle id="alert-dialog-title">
+                {"Delete post?"}
+              </DialogTitle>
+              <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                  Are you sure you want to delete this post?
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleClose} autoFocus>No</Button>
+                <Button onClick={handleClose}>Yes</Button>
+              </DialogActions>
+            </Dialog>
+            {/* </Link> */}
+          </div>
         </Box>
 
         <Link
-          to={`./open/${data?._id?.$oid}`}
+          to={`../posts/open/${data?._id?.$oid}`}
           state={{ postData: data }}
         >
           <Container
