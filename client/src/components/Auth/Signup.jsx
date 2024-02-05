@@ -1,20 +1,22 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import {
-  Box,
-  Typography,
-  Grid,
-  TextField,
-  Button,
-} from "@mui/material";
+import logo from "../../assets/logo.svg";
+import { GoogleLogin, googleLogout } from "@react-oauth/google";
+import { Box, Typography, Grid, TextField, Button } from "@mui/material";
 
 function Signup({ setIsLogin }) {
+  const user = false;
+
   function submitHandler(e) {
     e.preventDefault();
   }
   return (
     <>
-      <Typography variant="h3" color="white">
+      <div style={{ paddingTop: "5rem", textAlign: "center" }}>
+        <img src={logo} alt="logo" width="70%"  />
+      </div>
+
+      <Typography variant="h4" color="white">
         Sign up
       </Typography>
       <Box component="form" noValidate onSubmit={submitHandler} sx={{ p: 3 }}>
@@ -91,20 +93,26 @@ function Signup({ setIsLogin }) {
               }}
             />
           </Grid>
+          <Grid item xs={12}>
+            <Link to="./posts">
+              <Button fullWidth variant="contained">
+                Sign Up
+              </Button>
+            </Link>
+          </Grid>
+          <Grid item xs={12}>
+            <Typography textAlign={"center"} pb={1} variant="h6" color="white">
+              OR
+            </Typography>
+            <GoogleLogin
+              onSuccess={(response) => console.log(response)}
+              onError={() => console.log("Error")}
+            />
+          </Grid>
         </Grid>
 
-        <Link to="./posts">
-          <Button
-            fullWidth
-            variant="contained"
-            sx={{ mt: 3, mb: 2 }}
-          >
-            Sign Up
-          </Button>
-        </Link>
-
         <Grid container justifyContent="flex-end">
-          <Grid item sx={{ color: "white" }}>
+          <Grid item sx={{ color: "white", p: 1 }}>
             Already have an account?{" "}
             <Link
               onClick={() => {

@@ -1,7 +1,7 @@
 import React from "react";
-import { useLocation, useNavigate } from "react-router-dom";
 import "../../App.css";
-import { Box, Container, Stack, Typography, Backdrop } from "@mui/material";
+import { useLocation, useNavigate } from "react-router-dom";
+import { Box, Container, Stack, Typography, Modal, Backdrop } from "@mui/material";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import Navbar from "../Navbar";
 
@@ -26,10 +26,20 @@ const PostDetailsModal = () => {
       }}
     >
       <Navbar />
-      <Backdrop
-        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+      <Modal
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
         open={open}
-        onClick={handleClose}
+        onClose={handleClose}
+        slots={{ backdrop: Backdrop }}
+        slotProps={{
+          backdrop: {
+            timeout: 500,
+          },
+        }}
       >
         <Box
           style={{
@@ -91,7 +101,7 @@ const PostDetailsModal = () => {
             </Typography>
           </Stack>
         </Box>
-      </Backdrop>
+      </Modal>
     </Container>
   );
 };

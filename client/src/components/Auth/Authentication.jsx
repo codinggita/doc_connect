@@ -53,7 +53,7 @@ function Authentication() {
       <Card
         style={{
           margin: "auto",
-          minHeight: "80vh",
+          height: "90vh",
           width: "30rem",
           display: "flex",
           flexDirection: "column",
@@ -61,9 +61,8 @@ function Authentication() {
           alignItems: "center",
           backgroundColor: "rgba(0, 13, 46, .84)",
         }}
+        sx={{overflowY: "auto", scrollbarWidth: "thin"}}
       >
-        <img src={logo} alt="logo" width="80%" />
-
         {isLogin ? (
           <Login setIsLogin={setIsLogin} />
         ) : (

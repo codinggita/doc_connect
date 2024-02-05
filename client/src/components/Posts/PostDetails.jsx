@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
@@ -16,9 +16,12 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@mui/material";
+import axios from "axios";
 
 function PostDetails({ data }) {
   const [open, setOpen] = React.useState(false);
+  const navigate = useNavigate();
+  const apiURL = `https://docconnect-v51n.onrender.com/posts/${data._id.$oid}`;
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -27,6 +30,19 @@ function PostDetails({ data }) {
   const handleClose = () => {
     setOpen(false);
   };
+
+  const handleDelete = () => {
+    console.log(data._id)
+    axios.delete(apiURL)
+    .then(response => {
+      console.log(response);
+    })
+    .catch((error) => {
+      console.log(error);
+    })
+
+    setOpen(false);
+  }
 
   return (
     <Grid item xs={12} md={6} lg={4}>
@@ -41,7 +57,7 @@ function PostDetails({ data }) {
       >
         <Box style={{ display: "flex", justifyContent: "space-between" }}>
           <Link to={`../${data.user}`}>
-            <Typography variant="h6" fontFamily="cursive">
+            <Typography color="initial" variant="h6" fontFamily="cursive">
               {data.user}
             </Typography>
           </Link>
@@ -73,10 +89,8 @@ function PostDetails({ data }) {
                 </DialogContentText>
               </DialogContent>
               <DialogActions>
-                <Button onClick={handleClose} autoFocus>
-                  No
-                </Button>
-                <Button onClick={handleClose}>Yes</Button>
+                <Button onClick={handleClose} autoFocus>No</Button>
+                <Button onClick={handleDelete}>Yes</Button>
               </DialogActions>
             </Dialog>
           </div>

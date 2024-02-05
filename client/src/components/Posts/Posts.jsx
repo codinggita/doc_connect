@@ -1,20 +1,29 @@
-import React, { useState } from "react";
-import posts from "../../data";
+import React, { useState, useEffect } from "react";
+// import posts from "../../data";
 import "../../App.css";
 import { Grid, Typography, Container } from "@mui/material";
 import Navbar from "../Navbar";
 import PostDetails from "./PostDetails";
 import InfiniteScroll from "react-infinite-scroll-component";
+import axios from "axios";
 
 const Posts = () => {
+  const [items, setItems] = useState([]);
   const [numberOfItems, setNumberOfItems] = useState(6);
-  const [items, setItems] = useState(posts.slice(0, 6));
-
+  const apiURL = "https://docconnect-v51n.onrender.com/";
+  
+  useEffect(() => {
+    axios.get(apiURL)
+    .then(response => {
+      setItems(response.data);
+    })
+    .catch(error => {
+      console.log(error);
+    })
+  }, [])
+  
   function fetchData() {
     setTimeout(() => {
-      setItems((prevItems) =>
-        prevItems.concat(posts.slice(numberOfItems, numberOfItems + 6))
-      );
       setNumberOfItems((prevNumber) => prevNumber + 6);
     }, 500);
   }
@@ -29,7 +38,7 @@ const Posts = () => {
       <Navbar />
       <InfiniteScroll
         style={{ overflow: "none" }}
-        dataLength={posts.length}
+        dataLength={items.length}
         next={fetchData}
         hasMore={true}
       >

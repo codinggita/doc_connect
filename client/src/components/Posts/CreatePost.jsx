@@ -1,5 +1,5 @@
-import React from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import React, { useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import "../../App.css";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
@@ -12,32 +12,24 @@ import {
   Modal,
   Backdrop,
   Button,
+  Input,
 } from "@mui/material";
 import Navbar from "../Navbar";
 
-const VisuallyHiddenInput = styled("input")({
-  clip: "rect(0 0 0 0)",
-  clipPath: "inset(50%)",
-  height: 1,
-  overflow: "hidden",
-  position: "absolute",
-  bottom: 0,
-  left: 0,
-  whiteSpace: "nowrap",
-  width: 1,
-});
-
 const EditProile = () => {
   const navigate = useNavigate();
+  const captionRef = useRef("");
   const [open, setOpen] = React.useState(true);
 
   const handleClose = () => {
     setOpen(false);
     navigate(-1);
   };
-  
+
   function submitHandler(e) {
     e.preventDefault();
+    captionRef.current.focus;
+
   }
 
   return (
@@ -93,6 +85,7 @@ const EditProile = () => {
           <Grid container spacing={1}>
             <Grid item xs={12}>
               <TextField
+                ref={captionRef}
                 placeholder="Caption"
                 name="caption"
                 required
@@ -106,18 +99,38 @@ const EditProile = () => {
               />
             </Grid>
             <Grid item xs={12}>
-              <Button
-                component="label"
-                variant="contained"
-                startIcon={<CloudUploadIcon />}
-              >
-                Upload photo
-                <VisuallyHiddenInput type="file" />
-              </Button>
+              <Input
+                sx={{
+                  display: "none",
+                }}
+                name="image"
+                type="file"
+                inputProps={{ accept: "image/*" }}
+                required
+                id="image"
+                autoFocus
+              />
+              <label htmlFor="image">
+                <Button
+                  fullWidth
+                  component="span"
+                  startIcon={<CloudUploadIcon />}
+                  sx={{
+                    input: { color: "white" },
+                    border: "1px solid#fff",
+                  }}
+                >
+                  Upload Photo
+                </Button>
+              </label>
             </Grid>
           </Grid>
 
-          <Button fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+          <Button
+            fullWidth
+            variant="contained"
+            sx={{ mt: 3, mb: 2 }}
+          >
             Create Post
           </Button>
         </Box>

@@ -1,11 +1,13 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import logo from "../../assets/logo.svg";
 import { Box, Grid, Typography, TextField, Button } from "@mui/material";
 
 function Login({ setIsLogin }) {
   return (
     <>
-      <Typography variant="h3" color="white">
+      <img src={logo} alt="logo" width="90%" />
+      <Typography variant="h4" color="white">
         Login
       </Typography>
       <Box sx={{ p: 3 }}>
