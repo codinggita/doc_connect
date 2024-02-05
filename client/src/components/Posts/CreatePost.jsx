@@ -91,7 +91,7 @@ const EditProile = () => {
             Create Post
           </Typography>
           <Grid container spacing={1}>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12}>
               <TextField
                 placeholder="Caption"
                 name="caption"
