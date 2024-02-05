@@ -12,3 +12,7 @@
     height: 40rem;
     width: 40rem;
 }
+
+.deleteIcon::hover {
+    cursor: pointer;
+}

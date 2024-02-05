@@ -55,7 +55,9 @@ function PostDetails({ data }) {
             >
               <EditIcon color="primary" />
             </Link>
-            <DeleteIcon color="primary" onClick={handleClickOpen} />
+            <Link onClick={handleClickOpen}>
+              <DeleteIcon color="primary"/>
+            </Link>
             <Dialog
               open={open}
               onClose={handleClose}
@@ -71,11 +73,12 @@ function PostDetails({ data }) {
                 </DialogContentText>
               </DialogContent>
               <DialogActions>
-                <Button onClick={handleClose} autoFocus>No</Button>
+                <Button onClick={handleClose} autoFocus>
+                  No
+                </Button>
                 <Button onClick={handleClose}>Yes</Button>
               </DialogActions>
             </Dialog>
-            {/* </Link> */}
           </div>
         </Box>
 
