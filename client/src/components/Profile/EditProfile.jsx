@@ -12,6 +12,7 @@ import {
   Modal,
   Backdrop,
   Button,
+  Input,
 } from "@mui/material";
 import Navbar from "../Navbar";
 
@@ -122,28 +123,30 @@ const EditProfile = () => {
               />
             </Grid>
             <Grid item xs={12}>
-              <TextField
-                required
-                fullWidth
-                id="bio"
-                placeholder="Bio"
-                name="bio"
-                autoComplete="bio"
+            <Input
                 sx={{
-                  input: { color: "white" },
-                  border: "1px solid#fff",
+                  display: "none",
                 }}
+                name="image"
+                type="file"
+                inputProps={{ accept: "image/*" }}
+                required
+                id="image"
+                autoFocus
               />
-            </Grid>
-            <Grid item xs={12}>
-              <Button
-                component="label"
-                variant="contained"
-                startIcon={<CloudUploadIcon />}
-              >
-                Upload avatar
-                <VisuallyHiddenInput type="file" />
-              </Button>
+              <label htmlFor="image">
+                <Button
+                  fullWidth
+                  component="span"
+                  startIcon={<CloudUploadIcon />}
+                  sx={{
+                    input: { color: "white" },
+                    border: "1px solid#fff",
+                  }}
+                >
+                  Upload Photo
+                </Button>
+              </label>
             </Grid>
           </Grid>
 

@@ -1,19 +1,39 @@
 import React from "react";
-import { useLocation, useNavigate } from "react-router-dom";
 import "../../App.css";
-import { Box, Container, Stack, Typography, Backdrop } from "@mui/material";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import {
+  Box,
+  Container,
+  Stack,
+  Typography,
+  Modal,
+  Backdrop,
+} from "@mui/material";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import Navbar from "../Navbar";
+import axios from "axios";
 
 const PostDetailsModal = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const data = location.state?.postData;
   const [open, setOpen] = React.useState(true);
+  const [postLikes, setPostLikes] = React.useState(data.likes.length);
+  const likeURL = `http://localhost:3000/posts/${data._id}/likePost`;
+
   const handleClose = () => {
     setOpen(false);
     navigate(-1);
   };
+
+  function handleLikeClick() {
+    axios.patch(likeURL).catch((error) => {
+      console.log(error);
+      return;
+    });
+
+    setPostLikes(postLikes + 1);
+  }
 
   return (
     <Container
@@ -26,10 +46,20 @@ const PostDetailsModal = () => {
       }}
     >
       <Navbar />
-      <Backdrop
-        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+      <Modal
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
         open={open}
-        onClick={handleClose}
+        onClose={handleClose}
+        slots={{ backdrop: Backdrop }}
+        slotProps={{
+          backdrop: {
+            timeout: 500,
+          },
+        }}
       >
         <Box
           style={{
@@ -70,8 +100,8 @@ const PostDetailsModal = () => {
               {data.content}
             </Typography>
             <Typography pl={2} pt={1} variant="h6" color="initial">
-              <FavoriteIcon pr={2} color="primary" />
-              {data.likes.length}
+              <FavoriteIcon onClick={handleLikeClick} pr={2} color="primary" />
+              {postLikes}
             </Typography>
             <Typography
               variant="h6"
@@ -91,7 +121,7 @@ const PostDetailsModal = () => {
             </Typography>
           </Stack>
         </Box>
-      </Backdrop>
+      </Modal>
     </Container>
   );
 };
