@@ -8,7 +8,6 @@ import CreatePost from "./components/Posts/CreatePost";
 import EditPost from "./components/Posts/EditPost";
 import PostDetailsModal from "./components/Posts/PostDetailsModal";
 import EditProfile from "./components/Profile/EditProfile";
-import DeletePostModal from "./components/Posts/DeletePostModal";
 import { GoogleOAuthProvider } from '@react-oauth/google';
 // import { createContext } from "react";
 
@@ -24,7 +23,6 @@ function App() {
           <Route path="/posts/create" element={<CreatePost />} />
           <Route path="/posts/open/:id" element={<PostDetailsModal />} />
           <Route path="/posts/edit/:id" element={<EditPost />} />
-          <Route path="/posts/delete/:id" element={<DeletePostModal />} />
           <Route path="/chat" element={<ChatComp />} />
           <Route path="/:username" element={<Profile />} />
           <Route path="/profile/:username" element={<EditProfile />} />

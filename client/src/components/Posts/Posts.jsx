@@ -1,27 +1,45 @@
 import React, { useState, useEffect } from "react";
-// import posts from "../../data";
 import "../../App.css";
 import { Grid, Typography, Container } from "@mui/material";
 import Navbar from "../Navbar";
 import PostDetails from "./PostDetails";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { Hourglass } from "react-loader-spinner";
 import axios from "axios";
 
 const Posts = () => {
   const [items, setItems] = useState([]);
   const [numberOfItems, setNumberOfItems] = useState(6);
-  const apiURL = "https://docconnect-v51n.onrender.com/";
-  
+  const [loading, setLoading] = useState(true);
+  const apiURL = "http://localhost:3000/posts";
+
   useEffect(() => {
-    axios.get(apiURL)
-    .then(response => {
-      setItems(response.data);
-    })
-    .catch(error => {
-      console.log(error);
-    })
-  }, [])
-  
+    axios
+      .get(apiURL)
+      .then((response) => {
+        setItems(response.data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        setLoading(false);
+      });
+
+    const ws = new WebSocket("ws://localhost:3000/posts");
+
+    // Listen for deletion events
+    ws.onmessage = (event) => {
+      const deletedItemId = JSON.parse(event.data).id;
+      setItems((prevItems) =>
+        prevItems.filter((item) => item.id !== deletedItemId)
+      );
+    };
+
+    return () => {
+      ws.close(); // Close WebSocket connection on component unmount
+    };
+  }, []);
+
   function fetchData() {
     setTimeout(() => {
       setNumberOfItems((prevNumber) => prevNumber + 6);
@@ -51,15 +69,18 @@ const Posts = () => {
             alignItems: "center",
           }}
         >
-          <Grid item xs={12} style={{ textAlign: "center" }}>
+          <Grid item xs={12} style={{ textAlign: "center", paddingLeft: 0 }}>
             <Typography fontFamily="monospace" variant="h4">
               Posts
             </Typography>
           </Grid>
-
-          {items.map((post, index) => (
-            <PostDetails key={index} data={post} />
-          ))}
+          {loading ? (
+            <div style={{ textAlign: "center", marginTop: "8rem" }}>
+              <Hourglass color="#00BFFF" height={100} width={100} />
+            </div>
+          ) : (
+            items.map((post, index) => <PostDetails key={index} data={post} />)
+          )}
         </Grid>
       </InfiniteScroll>
     </Container>

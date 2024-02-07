@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -20,28 +20,41 @@ import axios from "axios";
 
 function PostDetails({ data }) {
   const [open, setOpen] = React.useState(false);
+  const [likes, setLikes] = useState(data.likes.length);
   const navigate = useNavigate();
-  const apiURL = `https://docconnect-v51n.onrender.com/posts/${data._id.$oid}`;
+  const deleteURL = `http://localhost:3000/posts/${data._id}/delete`;
+  const likeURL = `http://localhost:3000/posts/${data._id}/likePost`;
+  console.log(data.likes);
 
-  const handleClickOpen = () => {
+  function handleClickOpen() {
     setOpen(true);
-  };
+  }
 
-  const handleClose = () => {
+  function handleClose() {
     setOpen(false);
-  };
+  }
 
-  const handleDelete = () => {
-    console.log(data._id)
-    axios.delete(apiURL)
-    .then(response => {
-      console.log(response);
-    })
-    .catch((error) => {
+  function handleDelete() {
+    console.log(data._id);
+    axios
+      .delete(deleteURL)
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+    // navigate(-1);
+  }
+
+  function handleLikeClick() {
+    axios.patch(likeURL).catch((error) => {
       console.log(error);
-    })
+      return;
+    });
 
-    setOpen(false);
+    setLikes(likes + 1);
   }
 
   return (
@@ -72,7 +85,7 @@ function PostDetails({ data }) {
               <EditIcon color="primary" />
             </Link>
             <Link onClick={handleClickOpen}>
-              <DeleteIcon color="primary"/>
+              <DeleteIcon color="primary" />
             </Link>
             <Dialog
               open={open}
@@ -89,17 +102,16 @@ function PostDetails({ data }) {
                 </DialogContentText>
               </DialogContent>
               <DialogActions>
-                <Button onClick={handleClose} autoFocus>No</Button>
+                <Button onClick={handleClose} autoFocus>
+                  No
+                </Button>
                 <Button onClick={handleDelete}>Yes</Button>
               </DialogActions>
             </Dialog>
           </div>
         </Box>
 
-        <Link
-          to={`../posts/open/${data?._id?.$oid}`}
-          state={{ postData: data }}
-        >
+        <Link to={`../posts/open/${data._id}`} state={{ postData: data }}>
           <Container
             sx={{
               display: "flex",
@@ -115,16 +127,20 @@ function PostDetails({ data }) {
               alt="post"
             />
           </Container>
-          <Container style={{ display: "flex", margin: 0, padding: 0 }}>
-            <FavoriteIcon color="primary" sx={{ pt: "0.2rem", pr: "0.5rem" }} />
-            <Typography variant="h6" color="initial">
-              {data.likes.length}
-            </Typography>
-          </Container>
-          <Typography sx={{ fontSize: "medium" }} color="initial">
-            {data.content}
-          </Typography>
         </Link>
+        <Container style={{ display: "flex", margin: 0, padding: 0 }}>
+          <FavoriteIcon
+            onClick={handleLikeClick}
+            color="primary"
+            sx={{ pt: "0.2rem", pr: "0.5rem" }}
+          />
+          <Typography variant="h6" color="initial">
+            {likes}
+          </Typography>
+        </Container>
+        <Typography sx={{ fontSize: "medium" }} color="initial">
+          {data.content}
+        </Typography>
       </Paper>
     </Grid>
   );
