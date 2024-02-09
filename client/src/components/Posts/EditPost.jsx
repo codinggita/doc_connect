@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "../../App.css";
 import {
@@ -10,22 +10,34 @@ import {
   Button,
   Modal,
 } from "@mui/material";
-import FavoriteIcon from "@mui/icons-material/Favorite";
 import Navbar from "../Navbar";
+import axios from "axios";
 
 const EditPost = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const data = location.state?.postData;
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = useState(true);
+  const [data, setData] = useState(location.state?.postData);
+  console.log(data);
+  const apiURL = `http://localhost:3000/posts/${data._id}/edit`;
+
 
   const handleClose = () => {
     setOpen(false);
     navigate(-1);
   };
 
+  const handleChange = (event) => {
+    setData(event.target.value);
+  };
+
   function submitHandler(e) {
     e.preventDefault();
+
+    axios
+      .put(apiURL, { "content": data.content })
+      .then(() => navigate(-1))
+      .catch((err) => console.log(err));
   }
 
   return (
@@ -79,6 +91,7 @@ const EditPost = () => {
 
           <TextField
             value={data.content}
+            onChange={handleChange}
             name="caption"
             required
             fullWidth
@@ -90,7 +103,7 @@ const EditPost = () => {
             }}
           />
 
-          <Button fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+          <Button fullWidth type="submit" variant="contained" sx={{ mt: 3, mb: 2 }}>
             Edit Post
           </Button>
         </Box>

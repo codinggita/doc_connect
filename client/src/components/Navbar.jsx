@@ -1,13 +1,34 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { AppBar, Toolbar, IconButton } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/logo.svg";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import ChatBubbleIcon from "@mui/icons-material/ChatBubble";
 import AddIcon from "@mui/icons-material/Add";
 import LogoutIcon from "@mui/icons-material/Logout";
+import Cookies from "universal-cookie";
+
+const cookies = new Cookies();
 
 function Navbar() {
+  const navigate = useNavigate();
+  const user = cookies.get("jwt");
+
+  useEffect(() => {
+    if (!user) {
+      navigate("/");
+    }
+  }, [user, navigate]);
+
+  function handleLogout() {
+    try {      
+      cookies.remove("jwt");
+      // window.location.reload();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
     <AppBar
       style={{
@@ -31,12 +52,12 @@ function Navbar() {
             <AccountCircle color="primary" />
           </IconButton>
         </Link>
-        <Link to="/chat">
+        {/* <Link to="/chat">
           <IconButton aria-label="chat-icon">
             <ChatBubbleIcon color="primary" />
           </IconButton>
-        </Link>
-        <Link to="/">
+        </Link> */}
+        <Link onClick={handleLogout}>
           <IconButton aria-label="logout-icon">
             <LogoutIcon color="primary" />
           </IconButton>

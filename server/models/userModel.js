@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import jwt from "jsonwebtoken";
 
 const UserSchema = new mongoose.Schema({
   username: {
@@ -27,9 +28,23 @@ const UserSchema = new mongoose.Schema({
   },
   createdAt: {
     type: Date,
-    default: Date.now,
+    default: Date.now(),
   },
 });
+
+UserSchema.methods.generateAccessToken = function (secretKey) {
+  try {
+    const token = jwt.sign(
+      { id: this._id },
+      secretKey,
+      { expiresIn: "30d" }
+    );
+      return token;
+  } catch (err) {
+      console.log(`Error creating JWT token`, err);
+      process.exit(1);
+  }
+};
 
 var UserModel = mongoose.model("users", UserSchema);
 

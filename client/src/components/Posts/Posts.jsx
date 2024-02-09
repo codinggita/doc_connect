@@ -1,17 +1,31 @@
 import React, { useState, useEffect } from "react";
 import "../../App.css";
 import { Grid, Typography, Container } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import Navbar from "../Navbar";
+import Cookies from "universal-cookie";
 import PostDetails from "./PostDetails";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { Hourglass } from "react-loader-spinner";
 import axios from "axios";
 
+const cookies = new Cookies();
+
 const Posts = () => {
   const [items, setItems] = useState([]);
   const [numberOfItems, setNumberOfItems] = useState(6);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
   const apiURL = "http://localhost:3000/posts";
+  const user = cookies.get("jwt");
+
+  // useEffect(() => {
+  //   if (!user) {
+  //     navigate("/");
+  //   } else {
+  //     fetchData();
+  //   }
+  // }, [user, navigate]);
 
   useEffect(() => {
     axios
@@ -25,19 +39,19 @@ const Posts = () => {
         setLoading(false);
       });
 
-    const ws = new WebSocket("ws://localhost:3000/posts");
+    // const ws = new WebSocket("ws://localhost:3000");
 
     // Listen for deletion events
-    ws.onmessage = (event) => {
-      const deletedItemId = JSON.parse(event.data).id;
-      setItems((prevItems) =>
-        prevItems.filter((item) => item.id !== deletedItemId)
-      );
-    };
+    // ws.onmessage = (event) => {
+    //   const deletedItemId = JSON.parse(event.data).id;
+    //   setItems((prevItems) =>
+    //     prevItems.filter((item) => item.id !== deletedItemId)
+    //   );
+    // };
 
-    return () => {
-      ws.close(); // Close WebSocket connection on component unmount
-    };
+    // return () => {
+    //   ws.close(); // Close WebSocket connection on component unmount
+    // };
   }, []);
 
   function fetchData() {

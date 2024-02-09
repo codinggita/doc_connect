@@ -1,23 +1,22 @@
 import express from "express";
 import mongoose from "mongoose";
-import PostMessage from "../models/postMessage.js";
+import PostMessage from "../models/postModel.js";
 import { ObjectId } from "mongodb";
 
 const router = express.Router();
 
 export const getPosts = async (req, res) => {
   try {
-    const postMessages = await PostMessage.find();
-    console.log(postMessages);
+    const postMessages = await PostMessage.find().sort({ createdAt: -1 });
+    // console.log(postMessages)
     res.status(200).json(postMessages);
   } catch (error) {
-    console.log(error);
     res.status(404).json({ message: error.message });
   }
 };
 
 export const searchPosts = async (req, res) => {
-  const { hashtag } = req.params;
+  const hashtag = req.query.hashtag;
 
   try {
     const searchMessages = await PostMessage.find({ hashtags: hashtag });
@@ -46,21 +45,23 @@ export const getPostLikes = async (req, res) => {
 export const likePost = async (req, res) => {
   const { id } = req.params;
 
-  if (!req.userId) return res.json({ message: "Unauthenticated" });
+  // if (!req.userId) return res.json({ message: "Unauthenticated" });
 
   if (!mongoose.Types.ObjectId.isValid(id))
-    return res.status(404).send("No post with that ID");
+    return res.status(404).json({message: "No post with that ID"});
 
   const post = await PostMessage.findById(id);
-  const user = await UserModel.findById(id);
+  console.log(post);
+  post.likes.push('doctorwellness');
+  // const user = await UserModel.findById(id);
 
-  const index = post.likes.find((eachUser) => eachUser === user.username);
+  // const index = post.likes.find((eachUser) => eachUser === user.username);
 
-  if (index === -1) {
-    post.likes.push(user.username);
-  } else {
-    post.likes = post.likes.filter((eachUser) => eachUser !== user.username);
-  }
+  // if (index === -1) {
+  //   post.likes.push(user.username);
+  // } else {
+  //   post.likes = post.likes.filter((eachUser) => eachUser !== user.username);
+  // }
 
   const updatedPost = await PostMessage.findByIdAndUpdate(id, post, {
     new: true,
@@ -83,22 +84,16 @@ export const createPosts = async (req, res) => {
 
 export const editPost = async (req, res) => {
   const { id } = req.params;
-  const { user, content, image, hashtags} = req.body;
+  const { content } = req.body;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(404).send("Invalid post ID");
   }
 
   try {
-    const updatedPost = { user, content, image, hashtags, _id: id};
+    const editedPost = await PostMessage.findByIdAndUpdate(id, { "content": content }, { new: true });
 
-    await PostMessage.findByIdAndUpdate(id, updatedPost, { new: true });
-
-    if (!updatedPost) {
-      return res.status(404).json({ message: "No post found with that ID" });
-    }
-
-    res.status(200).json(updatedPost);
+    res.status(200).json(editedPost);
     
   } catch (error) {
     console.error(error);

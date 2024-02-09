@@ -1,18 +1,18 @@
 import UserModel from "../models/userModel.js";
-import PostMessage from "../models/postMessage.js";
+import PostMessage from "../models/postModel.js";
 
 export const getUser = async (req, res) => {
     const { username } = req.params;
     
     try {
         const user = await UserModel.find({"username": username});
-        return res.status(200).json({user});
+        return res.status(200).json(user);
     } catch(error) {
         return res.status(404).json({message: error.message});
     }
 }
 
-export const getUserPost = async (req, res) => {
+export const getUserPosts = async (req, res) => {
     const { username, post_id } = req.params;
     
     try {
@@ -21,4 +21,12 @@ export const getUserPost = async (req, res) => {
     } catch(error) {
         return res.status(404).json({message: error.message});
     }
+}
+
+export const editUserProfile = async (req, res) => {
+    
+}
+
+export const deleteUserProfile = async (req, res) => {
+
 }
