@@ -5,16 +5,15 @@ import cors from "cors";
 import postRoutes from "./routes/posts.js";
 import userRoutes from "./routes/users.js";
 import authRoutes from "./routes/auth.js";
-import PostMessage from "./models/postMessage.js";
 
 const PORT = process.env.PORT || 3000;
 const app = express();
 
 app.use(express.json());
 app.use(cors());
-app.use('/', postRoutes);
 app.use('/auth', authRoutes);
-app.use('/username', userRoutes);
+app.use('/:username', userRoutes);
+app.use('/posts', postRoutes);
 
 mongoose
   .connect(process.env.MONGO_URI)

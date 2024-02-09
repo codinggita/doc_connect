@@ -1,59 +1,61 @@
-import connect from "getstream";
+import "dotenv/config";
 import { StreamChat } from "stream-chat";
 import bcrypt from "bcryptjs";
 import UserModel from "../models/userModel.js";
 
 const api_key = process.env.STREAM_APP_KEY;
 const api_secret = process.env.STREAM_APP_SECRET;
-const api_id = process.env.STREAM_APP_ID;
+const app_id = process.env.STREAM_APP_ID;
+const secretKey = process.env.JWT_TOKEN;
 
 export const signin = async (req, res) => {
-  const { email, password } = req.body;
-
   try {
-    const existingUser = await UserModel.findOne();
+    const { username, password } = req.body;
+    if (username == "" || password == "") {
+      res.status(400).json({ message: "Invalid credentials" });
+    }
+
+    const existingUser = await UserModel.findOne({ username: username });
+    console.log(existingUser);
+
     if (!existingUser) {
       return res.status(404).json({ message: "User doesn't exist." });
     }
+    // const serverClient = StreamChat.getInstance(api_key, api_secret);
 
-    const isPasswordCorrect = await bcrypt.compare(
-      password,
-      existingUser.password
-    );
+    // const tkn = existingUser._id.toString();
+    // const streamToken = serverClient.createToken(tkn);
 
-    if (!isPasswordCorrect) {
-      return res.status(400).json({ message: "Invalid credentials." });
+    const isCorrect = await bcrypt.compare(password, existingUser.password);
+
+    if (!isCorrect) {
+      return res.status(401).json({ message: "Invalid credentials" });
     }
 
-    const serverClient = connect(api_key, api_secret, api_id);
+    const accessToken = existingUser.generateAccessToken(secretKey);
 
-    const streamToken = serverClient.createUserToken(existingUser._id);
+    const responseObj = {
+      userObj: existingUser,
+      token: accessToken,
+    }
 
-    const jwttoken = jwt.sign(
-      { email: existingUser.email, id: existingUser._id },
-      process.env.JWT_TOKEN,
-      { expiresIn: "1h" }
-    );
-
-    res
-      .status(200)
-      .json({ result: existingUser, jwt: jwttoken, stream: streamToken });
+    res.status(200).json(responseObj);
   } catch (error) {
     res.status(500).json({ message: "Something went wrong" });
   }
 };
 
 export const signup = async (req, res) => {
-  const { username, name, email, password, confirmPassword } = req.params;
+  const { username, name, email, password, confirmPassword } = req.body;
 
   try {
-    const existingUser = await UserModel.findOne();
+    const existingUser = await UserModel.find({ username: username });
 
-    if (existingUser) {
+    if (existingUser.length > 0) {
       return res.status(400).json({ message: "User already exist." });
     }
 
-    if (password === confirmPassword) {
+    if (password !== confirmPassword) {
       return res.status(400).json({ message: "Passwords don't match." });
     }
 
@@ -64,21 +66,25 @@ export const signup = async (req, res) => {
       name,
       email,
       password: hashedPassword,
-      bio,
     });
+    console.log(newUser);
 
-    const jwttoken = jwt.sign(
-      { email: newUser.email, id: newUser._id },
-      process.env.JWT_TOKEN,
-      { expiresIn: "1h" }
-    );
+    const accessToken = newUser.generateAccessToken(secretKey);
 
-    const serverClient = connect(api_key, api_secret, api_id);
+    console.log(accessToken);
 
-    const streamToken = serverClient.createUserToken(newUser._id);
+    // const serverClient = StreamChat.getInstance(api_key, api_secret);
 
-    res.status(200).json({ result, jwt: jwttoken, stream: streamToken });
+    // const tkn = newUser._id.toString();
+    // const streamToken = serverClient.createToken(tkn);
+
+    const responseObj = {
+      userObj: newUser,
+      token: accessToken,
+    }
+
+    res.status(200).json(responseObj);
   } catch (error) {
-    res.status(500).json({ message: "Something went wrong" });
+    res.status(500).json(error);
   }
 };
