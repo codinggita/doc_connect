@@ -1,7 +1,18 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../../assets/logo.svg";
-import { Box, Grid, Typography, TextField, Button, Dialog, DialogContent, DialogTitle, DialogContentText, DialogActions } from "@mui/material";
+import {
+  Box,
+  Grid,
+  Typography,
+  TextField,
+  Button,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogContentText,
+  DialogActions,
+} from "@mui/material";
 import Cookies from "universal-cookie";
 import axios from "axios";
 const apiURL = "http://localhost:3000/auth/signin";
@@ -9,7 +20,8 @@ const apiURL = "http://localhost:3000/auth/signin";
 const cookies = new Cookies();
 
 function Login({ setIsLogin }) {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState("Please enter correct credentials.");
 
   const handleClose = () => {
     setOpen(false);
@@ -22,7 +34,7 @@ function Login({ setIsLogin }) {
 
   const navigate = useNavigate();
 
-  function submitHandler(event) {
+  const submitHandler = async (event) => {
     event.preventDefault();
 
     if (userData.username == "" || userData.password == "") {
@@ -30,22 +42,21 @@ function Login({ setIsLogin }) {
       return;
     }
 
-    const { result } = axios
-      .post(apiURL, userData)
-      .then((response) => console.log(response))
-      .catch(() => {
-        setOpen(true);
-        return;
-      });
+    let res;
 
-    console.log(result);
-    navigate("./posts");
-    // cookies.set("id", _id);
-    // cookies.set("jwt", jwt);
+    try {
+      res = await axios.post(apiURL, userData);
+      navigate("./posts");
+    } catch (error) {
+      // console.log(error)
+      setMessage(error.response.data.message);
+      setOpen(true);
+      return;
+    }
+
+    cookies.set("jwt", res.data.token);
     // cookies.set("stream", stream);
-    // cookies.set("username", username);
-    // cookies.set("hashedPassword", hashedPassword);
-  }
+  };
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -129,11 +140,11 @@ function Login({ setIsLogin }) {
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          {"Invalid Credentials"}
+          {"Please Try Again"}
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Please enter correct credentials.
+            {message}
           </DialogContentText>
         </DialogContent>
         <DialogActions>

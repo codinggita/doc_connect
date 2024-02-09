@@ -24,7 +24,7 @@ function PostDetails({ data }) {
   const navigate = useNavigate();
   const deleteURL = `http://localhost:3000/posts/${data._id}/delete`;
   const likeURL = `http://localhost:3000/posts/${data._id}/likePost`;
-  console.log(data.likes);
+  // console.log(data.likes);
 
   function handleClickOpen() {
     setOpen(true);
@@ -39,6 +39,7 @@ function PostDetails({ data }) {
     axios
       .delete(deleteURL)
       .then((response) => {
+        window.location.reload();
         console.log(response);
       })
       .catch((error) => {
@@ -78,7 +79,7 @@ function PostDetails({ data }) {
           <div>
             {/* {loggedInUser == data.user && edit} */}
             <Link
-              to={`../posts/edit/${data?._id?.$oid}`}
+              to={`../posts/edit/${data._id.$oid}`}
               state={{ postData: data }}
               style={{ paddingRight: "0.5rem" }}
             >

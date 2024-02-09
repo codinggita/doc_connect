@@ -4,7 +4,16 @@ import Cookies from "universal-cookie";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../../assets/logo.svg";
 import { GoogleLogin, googleLogout } from "@react-oauth/google";
-import { Box, Typography, Grid, TextField, Button } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Grid,
+  TextField,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogTitle,
+} from "@mui/material";
 const apiURL = "http://localhost:3000/auth/signup";
 
 const cookies = new Cookies();
@@ -12,6 +21,8 @@ const cookies = new Cookies();
 function Signup({ setIsLogin }) {
   const user = false;
   const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState("Please Enter All Fields.");
 
   const [userData, setUserData] = useState({
     name: "",
@@ -21,24 +32,41 @@ function Signup({ setIsLogin }) {
     confirmPassword: "",
   });
 
-  function submitHandler(e) {
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const submitHandler = async (e) => {
     e.preventDefault();
     console.log(userData);
-    // const { name, username, email, password, confirmPassword } = userData;
- 
-    const { data: { jwt, stream, newUser: { _id, username, hashedPassword } } } = axios
-      .post(apiURL, userData)
-      .then((response) => console.log(response))
-      .catch((error) => console.log(error));
 
-    console.log(data);
-    cookies.set("id", _id);
-    cookies.set("jwt", jwt);
-    cookies.set("stream", stream);
-    cookies.set("username", username);
-    cookies.set("hashedPassword", hashedPassword);
-    navigate('./posts');
-  }
+    if (
+      userData.name == "" ||
+      userData.username == "" ||
+      userData.email == "" ||
+      userData.password == "" ||
+      userData.confirmPassword == ""
+    ) {
+      setOpen(true);
+      return;
+    }
+
+    let res;
+
+    try {
+      res = await axios.post(apiURL, userData);
+      navigate("./posts");
+    } catch (error) {
+      console.log(error)
+      setMessage(error.response.data.message);
+      setOpen(true);
+      return;
+    }
+
+    console.log(res);
+    cookies.set("jwt", res.data.userObj.token);
+    // cookies.set("stream", stream);
+  };
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -180,6 +208,18 @@ function Signup({ setIsLogin }) {
           </Grid>
         </Grid>
       </Box>
+
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{message}</DialogTitle>
+        <DialogActions>
+          <Button onClick={handleClose}>OK</Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }
